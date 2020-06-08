@@ -45,3 +45,4 @@ public class ParamFirework : MonoBehaviour
         visualEffect.SetInt("FireWorkSpawnRate", fireWorkSpawnRate);
     }
 }
+
