@@ -18,7 +18,7 @@ public class AudioPeer : MonoBehaviour
     public float[] freqBandHighest = new float[8];
     public float[] audioBand = new float[8];
     public float[] audioBandBuffer = new float[8];
-    public float _audioProfile;
+    public float _audioProfile = 0.01f;
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +40,9 @@ public class AudioPeer : MonoBehaviour
         _audioSource.GetSpectrumData(samples, 0, FFTWindow.Blackman);
     }
 
+    // AudioProfile is a function that sets a default value for freqBandHighest.
+    // This is so that whenever we grab values from audioBand we don't get a 
+    // divide by 0 error.
     void AudioProfile(float audioProfile)
     {
         for(int i=0; i < 8; i++)
@@ -47,6 +50,8 @@ public class AudioPeer : MonoBehaviour
             freqBandHighest[i] = audioProfile;
         }
     }
+
+    //CreateAudioBands() is a function that clamps the FFTSpectrum values between 0 and 1
     void CreateAudioBands()
     {
         for (int i = 0; i < 8; i++)
@@ -59,6 +64,10 @@ public class AudioPeer : MonoBehaviour
             audioBandBuffer[i] = (bandBuffer[i] / freqBandHighest[i]);
         }
     }
+
+    //BandBuffer is a function that smooths the transition from high values
+    //to low values. It looks better when the values accelerate to a lower value
+    //and jump to a high value.
     void BandBuffer()
     {
         for (int i = 0; i < 8; i++)
@@ -112,7 +121,7 @@ public class AudioPeer : MonoBehaviour
 
             for (int j = 0; j < sampleCount; j++)
             {
-                average += samples[count] * (count+1); //we do like this because the higher range freq are really smol
+                average += samples[count] * (count+1); //we add this cause higher freq values are really small
                 count++;
             }
 
