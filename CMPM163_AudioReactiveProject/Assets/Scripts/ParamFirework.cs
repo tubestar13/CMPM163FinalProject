@@ -8,6 +8,7 @@ public class ParamFirework : MonoBehaviour
 {
 	public int _band;
 	public float _startScale, _scaleMultiplier;
+    public AudioPeer audioPeer;
     // Start is called before the first frame update
     [SerializeField]
 	private VisualEffect visualEffect;
@@ -22,16 +23,16 @@ public class ParamFirework : MonoBehaviour
 	private int fireWorkSpawnRate = 1;
     void Start()
     {
-        _band = 5;
+        _band = 6;
     }
 
     // Update is called once per frame
     void Update()
     {
-    	explosionSize = (FireworkExplode._freqBand[_band] * _scaleMultiplier) + _startScale;
+    	explosionSize = (audioPeer.bandBuffer[_band] * _scaleMultiplier) + _startScale;
         visualEffect.SetFloat("ExplosionSize", explosionSize);
 
-        if((FireworkExplode._freqBand[_band] * _scaleMultiplier) + _startScale > 17)
+        if((audioPeer.bandBuffer[_band] * _scaleMultiplier) + _startScale > 17)
         {
         	rocketLifetime = 0;
         }
@@ -41,7 +42,7 @@ public class ParamFirework : MonoBehaviour
         }
         visualEffect.SetFloat("RocketLifetime", rocketLifetime);
 
-        fireWorkSpawnRate = (int)(Math.Truncate(((FireworkExplode._freqBand[_band]) + _startScale)));
+        fireWorkSpawnRate = (int)Math.Truncate(audioPeer.bandBuffer[_band] + _startScale);
         visualEffect.SetInt("FireWorkSpawnRate", fireWorkSpawnRate);
     }
 }
